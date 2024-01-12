@@ -1,0 +1,145 @@
+= Enforcer Rules
+
+== Description
+
+This project provides additional rules for the Maven enforcer plugin in order to make easier to keep pom files clean and consistent.
+
+It is initially inspired by the https://github.com/ceilfors/enforcer-rules.git[enforcer-extra-rules] project.
+
+The following rules are available:
+
+* **BanOverrideDependencyManagementVersion** enforces that dependency management version defined in parent is not overridden in the project's pom.
+* **BanProfile** enforces that no profile is active.
+* **BanRedundantDependencyVersion** enforces that identical dependency versions are not specified in the project's pom if they are already specified in the dependency management section.
+* **RequireArtifactIdFormat** enforces that the artifact id of the project matches a given regular expression.
+* **RequireArtifactIdMatchBaseDirectory** enforces that the artifact id of the project matches the base directory.
+* **RequireDependencyManagementVersion** enforces that all dependencies version are defined in the dependency management section.
+* **RequireGroupIdMatchBasePackage** enforces that group id of the project matches the base package.
+
+== Usage
+
+[source,xml]
+----
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>io.github.cedricsoual</groupId>
+            <artifactId>enforcer-rules</artifactId>
+            <version>1.0.0</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+        </configuration>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <configuration>
+              <rules>
+                <banOverrideDependencyManagementVersion/>
+                <banProfile/>
+                <banRedundantDependencyVersion/>
+                <requireArtifactIdFormat/>
+                <requireArtifactIdMatchBaseDirectory/>
+                <requireDependencyManagementVersion/>
+                <requireGroupIdMatchBasePackage/>
+              </rules>
+            </configuration>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
+----
+
+== Configuration
+
+=== BanOverrideDependencyManagement
+
+[cols="1,1, 1"]
+|===
+|Property name |Default value |Description
+
+|ignoreArtifactIds |[] |The artifact ids to ignore.
+|ignoreGroupIds |[] |The group ids to ignore.
+|ignoreScopes |[] |The scopes to ignore.
+|===
+
+==== Example
+
+[source,xml]
+----
+<banOverrideDependencyManagementVersion>
+  <ignoreArtifactIds>
+    <ignoreArtifactId>commons-logging</ignoreArtifactId>
+  </ignoreArtifactIds>
+  <ignoreGroupIds>
+    <ignoreGroupId>org.apache.commons</ignoreGroupId>
+  </ignoreGroupIds>
+  <ignoreScopes>
+    <ignoreScope>test</ignoreScope>
+  </ignoreScopes>
+</banOverrideDependencyManagementVersion>
+----
+
+=== BanRedundantDependencyVersions
+
+[cols="1,1, 1"]
+|===
+|Property name |Default value |Description
+
+|ignoreArtifactIds |[] |The artifact ids to ignore.
+|ignoreGroupIds |[] |The group ids to ignore.
+|ignoreScopes |[] |The scopes to ignore.
+|===
+
+=== RequireArtifactIdFormat
+
+[cols="1,1, 1"]
+|===
+|Property name |Default value |Description
+
+|regex |[a-z-]+ |The regular expression to match the artifact id against.
+|===
+
+=== RequireArtifactIdMatchBaseDirectory
+
+[cols="1,1, 1"]
+|===
+|Property name |Default value |Description
+
+|ignorePomPackaging |true |Whether to ignore project with pom packaging.
+|===
+
+=== RequireDependencyManagement
+
+[cols="1,1, 1"]
+|===
+|Property name |Default value |Description
+
+|ignoreArtifactIds |[] |The artifact ids to ignore.
+|ignoreGroupIds |[] |The group ids to ignore.
+|ignoreScopes |[] |The scopes to ignore.
+|versionMatch |true |Whether to check that the dependency version matches the dependency management version.
+|===
+
+=== RequireGroupIdMatchBasePackage
+
+[cols="1,1, 1"]
+|===
+|Property name |Default value |Description
+
+|ignorePomPackaging |true |Whether to ignore project with pom packaging.
+|===
+

@@ -11,6 +11,7 @@
     <name>Enforcer Rules Parent</name>
     <description>Additional custom rules for Maven Enforcer</description>
     <url>https://github.com/cedricsoual/enforcer-rules/</url>
+    <inceptionYear>2024</inceptionYear>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

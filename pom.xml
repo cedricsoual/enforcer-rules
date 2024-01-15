@@ -182,12 +182,9 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
+                        <version>1.10.0</version>
                         <configuration>
                             <jreleaser>
-                                <signing>
-                                    <active>ALWAYS</active>
-                                    <armored>true</armored>
-                                </signing>
                                 <deploy>
                                     <maven>
                                         <nexus2>

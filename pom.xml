@@ -189,11 +189,6 @@
                                 </signing>
                                 <deploy>
                                     <maven>
-                                        <pomchecker>
-                                            <version>1.10.0</version>
-                                            <failOnWarning>true</failOnWarning>
-                                            <failOnError>true</failOnError>
-                                        </pomchecker>
                                         <nexus2>
                                             <maven-central>
                                                 <active>ALWAYS</active>

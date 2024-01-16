@@ -5,7 +5,7 @@
 
     <groupId>io.github.cedricsoual</groupId>
     <artifactId>enforcer-rules</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <name>Enforcer Rules</name>
     <description>Additional custom rules for Maven Enforcer</description>

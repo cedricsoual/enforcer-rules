@@ -39,18 +39,19 @@ public class BanOverrideDependencyManagementVersion extends AbstractStandardEnfo
         final String newLine = System.getProperty("line.separator");
         final Map<String, Dependency> dependencyMgt = MavenProjectUtils.dependencyManagement(project);
         final Map<String, Dependency> dependencyMgtParent = MavenProjectUtils.dependencyManagement(project.getParent());
-        final Set<Dependency> overridenDependencies = dependencyMgtParent.entrySet()
+        final Set<Dependency> overriddenDependencies = dependencyMgtParent.entrySet()
                 .stream()
                 .filter(dependencyByKey -> dependencyByKey.getValue().getScope() == null || !ignoreScopes.contains(dependencyByKey.getValue().getScope()))
                 .filter(dependencyByKey -> !ignoreGroupIds.contains(dependencyByKey.getValue().getGroupId()))
                 .filter(dependencyByKey -> !ignoreArtifacts.contains(dependencyByKey.getValue().getGroupId() + ":" + dependencyByKey.getValue().getArtifactId()))
                 .filter(dependencyByKey -> dependencyMgt.containsKey(dependencyByKey.getKey()))
+                .filter(dependencyByKey -> dependencyMgt.get(dependencyByKey.getKey()).getVersion() != null)
                 .filter(dependencyByKey -> !dependencyMgt.get(dependencyByKey.getKey()).getVersion().equals(dependencyByKey.getValue().getVersion()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toSet());
 
-        if (!overridenDependencies.isEmpty()) {
-            final String errors = overridenDependencies.stream()
+        if (!overriddenDependencies.isEmpty()) {
+            final String errors = overriddenDependencies.stream()
                     .map(Dependency::getManagementKey)
                     .map(managementKey -> String.format("- '%s' version is already managed by the parent and is not allowed to be overridden", managementKey))
                     .collect(Collectors.joining(newLine));

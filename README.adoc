@@ -27,19 +27,21 @@ The following rules are available:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
+        <version>3.4.0</version>
         <dependencies>
           <dependency>
             <groupId>io.github.cedricsoual</groupId>
             <artifactId>enforcer-rules</artifactId>
-            <version>1.0.0</version>
+            <version>0.1.0</version>
           </dependency>
         </dependencies>
-        <configuration>
-        </configuration>
         <executions>
           <execution>
-            <id>enforce</id>
+            <id>default-cli</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
             <configuration>
               <rules>
                 <banOverrideDependencyManagementVersion/>
@@ -51,9 +53,6 @@ The following rules are available:
                 <requireGroupIdMatchBasePackage/>
               </rules>
             </configuration>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>

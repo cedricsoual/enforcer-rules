@@ -181,7 +181,9 @@
                         <configuration>
                             <verbose>true</verbose>
                             <targetClasses>
-                                <param>io.github.cedricsoual.enforcer.rules.*</param>
+                                <param>io.github.cedricsoual.enforcer.rules.BanRedundantDependencyVersion</param>
+                                <param>io.github.cedricsoual.enforcer.rules.RequireArtifactIdFormat</param>
+                                <param>io.github.cedricsoual.enforcer.rules.RequireDependencyManagementVersion</param>
                             </targetClasses>
                             <targetTests>
                                 <param>io.github.cedricsoual.enforcer.rules.*</param>
@@ -193,7 +195,7 @@
                                 <outputFormat>HTML</outputFormat>
                             </outputFormats>
                             <timestampedReports>false</timestampedReports>
-                            <mutationThreshold>40</mutationThreshold>
+                            <mutationThreshold>90</mutationThreshold>
                             <avoidCallsTo>
                                 <avoidCallsTo>java.util.logging</avoidCallsTo>
                                 <avoidCallsTo>org.apache.log4j</avoidCallsTo>

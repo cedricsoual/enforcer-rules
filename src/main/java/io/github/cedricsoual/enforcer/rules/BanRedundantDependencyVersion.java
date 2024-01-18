@@ -49,12 +49,9 @@ public class BanRedundantDependencyVersion extends AbstractStandardEnforcerRule 
                 .filter(dependency -> !ignoreArtifacts.contains(dependency.getGroupId() + ":" + dependency.getArtifactId()))
                 .filter(dependency -> {
                     final Dependency depMgtDependency = dependencyMgt.get(dependency.getManagementKey());
-                    if (isIdenticalVersion(dependency, depMgtDependency)) {
-                        final InputLocation locationVersionDepMgt = depMgtDependency.getLocation("version");
-                        final InputLocation locationVersionDep = dependency.getLocation("version");
-                        return isDifferentVersionDefinition(locationVersionDep, locationVersionDepMgt);
-                    }
-                    return false;
+                    final InputLocation locationVersionDepMgt = depMgtDependency.getLocation("version");
+                    final InputLocation locationVersionDep = dependency.getLocation("version");
+                    return isIdenticalVersion(dependency, depMgtDependency) && isDifferentVersionDefinition(locationVersionDep, locationVersionDepMgt);
                 })
                 .collect(Collectors.toSet());
 
@@ -76,10 +73,9 @@ public class BanRedundantDependencyVersion extends AbstractStandardEnforcerRule 
     }
 
     private static boolean isDifferentVersionDefinition(final InputLocation locationVersionDep, final InputLocation locationVersionDepMgt) {
-        return !locationVersionDep.getSource().getModelId().equals(locationVersionDepMgt.getSource().getModelId()) ||
-                (locationVersionDep.getSource().getModelId().equals(locationVersionDepMgt.getSource().getModelId())
-                        && locationVersionDepMgt.getLineNumber() != locationVersionDep.getLineNumber()
-                        && locationVersionDepMgt.getColumnNumber() != locationVersionDep.getColumnNumber());
+        return !locationVersionDepMgt.getSource().getModelId().equals(locationVersionDep.getSource().getModelId())
+                || locationVersionDepMgt.getLineNumber() != locationVersionDep.getLineNumber()
+                || locationVersionDepMgt.getColumnNumber() != locationVersionDep.getColumnNumber();
     }
 
 }

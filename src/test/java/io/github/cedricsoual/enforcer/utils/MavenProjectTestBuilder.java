@@ -3,6 +3,7 @@ package io.github.cedricsoual.enforcer.utils;
 import org.apache.maven.model.*;
 import org.apache.maven.project.MavenProject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MavenProjectTestBuilder {
@@ -19,8 +20,8 @@ public class MavenProjectTestBuilder {
         private String groupId = "io.github.cedricsoual.enforcer.rules";
         private String artifactId = "enforcer-rules";
         private String version = "1.0.0";
-        private List<Dependency> dependencies = List.of();
-        private List<Dependency> dependencyManagement = List.of();
+        private List<Dependency> dependencies = new ArrayList<>();
+        private List<Dependency> dependencyManagement = new ArrayList<>();
         private String packaging = "jar";
 
         private MavenProjectBuilder() {
@@ -41,8 +42,18 @@ public class MavenProjectTestBuilder {
             return this;
         }
 
+        public MavenProjectBuilder dependency(final Dependency dependency) {
+            this.dependencies.add(dependency);
+            return this;
+        }
+
         public MavenProjectBuilder dependencies(final List<Dependency> dependencies) {
             this.dependencies = dependencies;
+            return this;
+        }
+
+        public MavenProjectBuilder dependencyManagement(final Dependency dependency) {
+            this.dependencyManagement.add(dependency);
             return this;
         }
 

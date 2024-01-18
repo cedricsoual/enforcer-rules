@@ -13,20 +13,17 @@ class RequireDependencyManagementVersionTest {
     @Test
     void execute() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
+                                .groupId("io.github.cedricsoual.enforcer.rules")
+                                .artifactId("enforcer-rules")
+                                .version("1.0.0")
+                                .build())
+                .dependencyManagement(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
                                 .build()
-                ))
-                .dependencyManagement(List.of(
-                        DependencyTestBuilder.builder()
-                                .groupId("io.github.cedricsoual.enforcer.rules")
-                                .artifactId("enforcer-rules")
-                                .version("1.0.0")
-                                .build()
-                )).build();
+                ).build();
 
         Assertions.assertThatNoException().isThrownBy(() -> new RequireDependencyManagementVersion(project).execute());
     }
@@ -34,13 +31,11 @@ class RequireDependencyManagementVersionTest {
     @Test
     void executeWhenArtifactIgnored() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
-                                .build()
-                ))
+                                .build())
                 .build();
 
         Assertions.assertThatNoException().isThrownBy(() -> {
@@ -53,13 +48,11 @@ class RequireDependencyManagementVersionTest {
     @Test
     void executeWhenGroupIdIgnored() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
-                                .build()
-                ))
+                                .build())
                 .build();
 
         Assertions.assertThatNoException().isThrownBy(() -> {
@@ -72,14 +65,12 @@ class RequireDependencyManagementVersionTest {
     @Test
     void executeWhenScopeIgnored() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
                                 .scope("test")
-                                .build()
-                ))
+                                .build())
                 .build();
 
         Assertions.assertThatNoException().isThrownBy(() -> {
@@ -92,54 +83,67 @@ class RequireDependencyManagementVersionTest {
     @Test
     void executeWhenFailsOnMissingDependencyManagement() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
-                                .build()
-                ))
+                                .build())
                 .build();
-        Assertions.assertThatThrownBy(() -> new RequireDependencyManagementVersion(project).execute());
+        Assertions.assertThatThrownBy(() -> new RequireDependencyManagementVersion(project).execute())
+                .hasMessageContaining("Please update the dependency management")
+                .hasMessageContaining("version is not managed by dependency management");
+    }
+
+    @Test
+    void executeWhenFailsOnMissingDependencyManagementVersion() {
+        MavenProject project = MavenProjectTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
+                                .groupId("io.github.cedricsoual.enforcer.rules")
+                                .artifactId("enforcer-rules")
+                                .version("1.0.0")
+                                .build())
+                .dependencyManagement(DependencyTestBuilder.builder()
+                        .groupId("io.github.cedricsoual.enforcer.rules")
+                        .artifactId("enforcer-rules")
+                        .version(null)
+                        .build())
+                .build();
+        Assertions.assertThatThrownBy(() -> new RequireDependencyManagementVersion(project).execute())
+                .hasMessageContaining("Please update the dependency management")
+                .hasMessageContaining("version is not managed by dependency management");
     }
 
     @Test
     void executeWhenFailsOnDifferentVersion() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
-                                .build()
-                ))
-                .dependencyManagement(List.of(
-                        DependencyTestBuilder.builder()
+                                .build())
+                .dependencyManagement(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.1")
-                                .build()
-                )).build();
-        Assertions.assertThatThrownBy(() -> new RequireDependencyManagementVersion(project).execute());
+                                .build()).build();
+        Assertions.assertThatThrownBy(() -> new RequireDependencyManagementVersion(project).execute())
+                .hasMessageContaining("version is different from the version defined in dependency management");
     }
 
     @Test
     void executeWhenMatchVersionDisabledAndDifferentVersion() {
         MavenProject project = MavenProjectTestBuilder.builder()
-                .dependencies(List.of(
-                        DependencyTestBuilder.builder()
+                .dependency(DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.0")
-                                .build()
-                ))
-                .dependencyManagement(List.of(
+                                .build())
+                .dependencyManagement(
                         DependencyTestBuilder.builder()
                                 .groupId("io.github.cedricsoual.enforcer.rules")
                                 .artifactId("enforcer-rules")
                                 .version("1.0.1")
-                                .build()
-                )).build();
+                                .build()).build();
         Assertions.assertThatNoException().isThrownBy(() -> {
             RequireDependencyManagementVersion requireDependencyManagementVersion = new RequireDependencyManagementVersion(project);
             requireDependencyManagementVersion.versionMatch = false;
